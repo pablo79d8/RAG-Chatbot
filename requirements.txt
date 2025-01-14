@@ -8,3 +8,4 @@ huggingface-hub
 ollama
 unstructured[docx]
 langchain-huggingface
+tiktoken
