@@ -2,7 +2,7 @@
 
 # Conversational RAG Application with Ollama and Llama 3.2
 
-`Implement RAG using Llama 3.2.ipynb` notebook implements a Conversational Retrieval-Augmented Generation (RAG) application using Ollama and the Llama 3.2 model. The application allows for efficient document loading, splitting, embedding, and conversation management. Below are detailed descriptions of the key functions and installation instructions for Ollama.
+`Implement RAG using Llama 3.2.ipynb` notebook implements a Conversational Retrieval-Augmented Generation (RAG) application using Ollama and the Llama 3.2 model. The application allows for efficient document loading, splitting, embedding, and conversation management. Below are detailed descriptions of the key functions and installation instructions for Ollama. The Streamlit app file: `app.py`
 
 
 ## Installation Instructions for Ollama and Llama 3.2
