@@ -7,3 +7,4 @@ faiss-cpu
 huggingface-hub
 ollama
 unstructured[docx]
+langchain-huggingface
