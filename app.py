@@ -1,8 +1,8 @@
 import streamlit as st
-from langchain.document_loaders import DirectoryLoader, PyPDFLoader
+from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader, TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.llms import Ollama
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_community.chat_message_histories import ChatMessageHistory
@@ -12,6 +12,7 @@ from sentence_transformers import SentenceTransformer, util
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain.chains import create_history_aware_retriever
 from langchain_huggingface import HuggingFaceEmbeddings
+
 
 bot_template = '''
 <div style="display: flex; align-items: center; margin-bottom: 10px;">
@@ -58,23 +59,14 @@ button_style = """
 
 # Function to prepare and split documents
 def prepare_and_split_docs(pdf_directory):
-    split_docs = []
-    for pdf in pdf_directory:
+  # Cargar los archivos con ejemplos de código
+    loader = TextLoader("../RAG/busqueda_binaria.java")  # Puedes cargar varios archivos
+    documents = loader.load()
 
-        with open(pdf.name, "wb") as f:
-            f.write(pdf.getbuffer())
-        
-        # Use PyPDFLoader with the saved file path
-        loader = PyPDFLoader(pdf.name)
-        documents = loader.load()
-        splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-            chunk_size=512,
-            chunk_overlap=256,
-            disallowed_special=(),
-            separators=["\n\n", "\n", " "]
-        )
-        split_docs.extend(splitter.split_documents(documents))
-    return split_docs
+    # Dividir el texto en fragmentos para el RAG
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+    docs = text_splitter.split_documents(documents)
+    return docs
 
 # Function to ingest documents into the vector database
 def ingest_into_vectordb(split_docs):
@@ -195,7 +187,8 @@ if st.button("Submit"):
     if user_input and 'conversational_chain' in st.session_state:
         session_id = "abc123"  # Static session ID for this demo; you can make it dynamic if needed
         conversational_chain = st.session_state.conversational_chain
-        response = conversational_chain.invoke({"input": user_input}, config={"configurable": {"session_id": session_id}})
+        response = conversational_chain.invoke({"input": user_input}, config={"configurable": {"session_id": "abc123"}})
+
         context_docs = response.get('context', [])
         st.session_state.chat_history.append({"user": user_input, "bot": response['answer'],  "context_docs": context_docs})
 
